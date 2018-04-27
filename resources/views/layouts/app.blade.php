@@ -87,8 +87,12 @@
             </div>
         </div>
     </nav>
-
     <main class="py-4">
+        <div class="col-12">
+            @include('flash.error')
+            @include('flash.messages')
+            @include('flash.status')
+        </div>
         @yield('content')
     </main>
 </div>
