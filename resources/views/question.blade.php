@@ -34,17 +34,45 @@
 
                     <div class="card-body">
                         @forelse($question->answers as $answer)
-                            <div class="card">
-                                <div class="card-body">{{$answer->body}}</div>
-                                <div class="card-footer">
+                            @if( $answer->like )
+                                <div class="card">
+                                    <div style="background-color:#CCFFCC" class=card-header>Good Answer</div>
+                                    <div class="card-body">{{$answer->body}}</div>
+                                    <div class="card-footer">
 
-                                    <a class="btn btn-primary float-right"
-                                       href="{{ route('answers.show', ['question_id'=> $question->id,'answer_id' => $answer->id]) }}">
-                                        View
-                                    </a>
+                                        {!! Form::model($answer, ['route' => ['answers.unlikeAns', $question, $answer], 'method' => 'get']) !!}
+                                        <button class="btn btn-danger float-left mr-2" value="submit" type="submit" id="submit">unLike
+                                        </button>
+                                        {!! Form::close() !!}
+                                        <a class="btn btn-primary float-right"
+                                           href="{{ route('answers.show', ['question_id'=> $question->id,'answer_id' => $answer->id]) }}">
+                                            View
+                                        </a>
 
+                                    </div>
                                 </div>
-                            </div>
+                            @else
+                            @endif
+                        @empty
+                        @endforelse
+                        @forelse($question->answers as $answer)
+                            @if( ! $answer->like )
+                                <div color="red" class="card">
+                                    <div class="card-body">{{$answer->body}}</div>
+                                    <div class="card-footer">
+                                        {!! Form::model($answer, ['route' => ['answers.likeAns', $question, $answer], 'method' => 'get']) !!}
+                                        <button class="btn btn-danger float-left mr-2" value="submit" type="submit" id="submit">Like
+                                        </button>
+                                        {!! Form::close() !!}
+                                        <a class="btn btn-primary float-right"
+                                           href="{{ route('answers.show', ['question_id'=> $question->id,'answer_id' => $answer->id]) }}">
+                                            View
+                                        </a>
+
+                                    </div>
+                                </div>
+                            @else
+                            @endif
                         @empty
                             <div class="card">
 

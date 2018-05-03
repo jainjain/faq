@@ -28,7 +28,8 @@ class AnswerController extends Controller
     {
         $answer = new Answer;
         $edit = FALSE;
-        return view('answerForm', ['answer' => $answer,'edit' => $edit, 'question' =>$question  ]);
+        $like = FALSE;
+        return view('answerForm', ['answer' => $answer,'edit' => $edit, 'question' =>$question,'like' => $like ]);
     }
 
     /**
@@ -53,6 +54,7 @@ class AnswerController extends Controller
         $Answer = new Answer($input);
         $Answer->user()->associate(Auth::user());
         $Answer->question()->associate($question);
+        $Answer->like = FALSE;
         $Answer->save();
 
         return redirect()->route('questions.show',['question_id' => $question->id])->with('message', 'Saved');
@@ -71,6 +73,7 @@ class AnswerController extends Controller
         return view('answer')->with(['answer' => $answer, 'question' => $question]);
 
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -123,6 +126,29 @@ class AnswerController extends Controller
 
         $answer->delete();
         return redirect()->route('questions.show',['question_id' => $question])->with('message', 'Delete');
+
+    }
+
+    public function likeAns($question, $answer)
+    {
+
+        $answer = Answer::find($answer);
+        $question = Question::find($question);
+        $answer->like = TRUE;
+        $answer->save();
+
+        return redirect()->route('questions.show',['question_id' => $question->id])->with('message', 'Answer Like Updated');
+    }
+
+    public function unlikeAns($question,  $answer)
+    {
+        $answer = Answer::find($answer);
+        $question = Question::find($question);
+        $answer->like = FALSE;
+        $answer->save();
+        return redirect()->route('questions.show',['question_id' => $question->id])->with('message', 'Answer unLike Updated');
+
+
 
     }
 }
